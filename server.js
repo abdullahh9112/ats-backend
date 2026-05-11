@@ -10,8 +10,19 @@ const app = express();
 connectDB();
 
 // Middleware
+const allowedOrigins = [
+  'https://multi-branch-recruitment-applicant-psi.vercel.app',
+  'https://multi-branch-recruitment-applicant-blush.vercel.app',
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
